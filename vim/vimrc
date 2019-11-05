@@ -1,0 +1,104 @@
+" vimplug plugin configurations
+
+" Install vimplug first
+call plug#begin('~/.vim/plugged')
+
+" Use git inside vim commands
+Plug 'tpope/vim-fugitive'
+" Open advance directory manager and open files
+Plug 'scrooloose/nerdtree'
+" Surround words with () or '' or change them
+Plug 'tpope/vim-surround'
+" Show changes in a git repo in vim
+Plug 'airblade/vim-gitgutter'
+" Like grep but faster, open files inside a quickfix window
+Plug 'mileszs/ack.vim'
+" Pretty colors
+Plug 'morhetz/gruvbox'
+" Autocomplete file names using fuzzy finder
+Plug 'junegunn/fzf'
+" The vim plugin to use the above
+Plug 'junegunn/fzf.vim'
+" Fix go to file for JS packages
+Plug 'feix760/vim-javascript-gf'
+" Save the last place visited
+Plug 'farmergreg/vim-lastplace'
+
+call plug#end()
+
+" git gutter faster refresh
+set updatetime=100
+
+" ack.vim
+let g:ackprg = 'ag --ignore PlayOnLinux\* --ignore sshfs --ignore Android\* --ignore android\* --ignore run --ignore tags -if'
+cnoreabbrev Ack Ack!
+nnoremap <Leader>a :Ack!<Space>
+
+" show the line exceeding 80 columns
+set colorcolumn=80,100
+
+" Set the pwd to the current file
+autocmd BufEnter * silent! lcd %:p:h
+
+" Enable auto indentation
+set autoindent
+set smartindent
+" Highlight current line
+set cursorline
+" Highlight current column
+set cursorcolumn
+" Wrap lines instead of overflow the screen
+set wrap
+" Specify syntax for some file types
+autocmd BufNewFile,BufRead *.tt  setlocal syntax=html
+autocmd BufNewFile,BufRead *.sql setlocal syntax=sql
+autocmd BufNewFile,BufRead *.js  setlocal suffixesadd=.js
+
+" Set tab size to 4 and expand tabs to space
+set ts=4 sts=4 sw=4 expandtab
+
+" Show line numbers
+set number
+" Enable spell checking
+set spell spelllang=en_us
+" Use better colors suitable for GUI and pseudo-terminal
+set termguicolors
+
+" gruvbox
+syntax enable
+set background=dark
+let g:gruvbox_contrast_light='hard'
+colorscheme gruvbox
+
+" Nerd tree
+map <C-n> :NERDTreeToggle<CR>
+
+" Change directory to the current file
+nnoremap <silent> <Leader>c :cd %:h<CR>
+" FZF
+" Open fzf for beginning ~/git
+nnoremap <silent> <Leader>f :FZF ~/git<CR>
+" Open fzf for home directory
+nnoremap <silent> <Leader>F :FZF<CR>
+" Open fzf for the current file
+nnoremap <silent> <Leader><Leader> :Files <C-R>=expand('%:h')<CR><CR>
+
+" Open a new tab
+nnoremap <silent> <Leader>t :tabe<CR>
+
+" Open a new small terminal window
+nnoremap <silent> <Leader>T <C-W>s10<C-W>+<C-W>j:term<CR>:startinsert<CR>
+
+" Save the current file
+nnoremap <silent> <Leader>w :w<CR>
+
+" Say the selected text
+vnoremap <silent> <Leader>s ::w !say&<CR><CR>
+
+" Change the window leader key to w
+nnoremap <silent> w <C-W>
+
+" Security
+set nomodeline
+
+" set shellcmdflag=-ic
