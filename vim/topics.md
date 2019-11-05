@@ -1,23 +1,73 @@
-- visual mode/edit mode/insert mode
+## Modes and navigations
+- visual mode/normal mode/insert mode
+- Visual mode:
+    - v character selection
+    - V line selection
+    - Ctrl+v block selection
 - Search the current word (*)
+    - n to go to next word
+    - N to go to previous word
 - Match parentheses (%)
 - Go to end of line ($ and 0)
 - Jump to word (e or f or t)
+    - b go back to beginning of a word
+    - e go back to end of a word
+    - ; go to the next selection
+    - f go to character
+    - t go to one place before the character
 - Jump beginning end (G or gg)
 - Going back to the previous file
-- finding a line
-- case insensitive search
+    - Ctrl+^
+- Finding a line
+    - /
+- Case insensitive search
+    - \c
 - replacing a line
+    - %s//
+    - %s//g Global
+    - %s//gc Interactive
 - search and replace in visual mode
 - advanced regex
+    - \v
+- Uppercase in visual mode
+    - U uppercase
+    - u lowercase
+
+## Advanced usage
+
 - buffers
 - tabs
+    - tabe (start a new tab and edit a file)
+    - gt go to next tab
+    - gT go to previous tab
 - windows
+    - Ctrl+w v open window vertically
+    - Ctrl+w s open window horizontally
+    - Ctrl+w w move to next window
+    - Ctrl+w q exit current window
+    - Ctrl+w T open window in a tab
+    - Ctrl+w - + vertical resize
+    - Ctrl+w < > horizontal resize
+    - Ctrl+w = Adjust size equally
 - registers
+    - "0 Specify register 0
+    - "0yy copy current line in register 0
+    - "0p paste current line from register 0
+    - :registers show registers
 - copy line to/from clipboard
+    - "+yy copy current line to clipboard
+    - "+p paste something from clipboard
 - copy to vim command
+    - Ctrl+r paste in command mode
 - tags
+    - Ctrl+] Go to the tag
+    - Ctrl+o Go back to previous tag
 - go to file
+    - gf go to file
 - refresh file
+    - :e!
+- Auto complete
+    - Ctrl+n
 - Spell check (You can use ]S to jump to the next word with bad spelling, see the suggested words using z= or add it to the dictionary with zg)
 - refresh vimrc
+    - so%
