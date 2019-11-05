@@ -1,0 +1,23 @@
+- visual mode/edit mode/insert mode
+- Search the current word (*)
+- Match parentheses (%)
+- Go to end of line ($ and 0)
+- Jump to word (e or f or t)
+- Jump beginning end (G or gg)
+- Going back to the previous file
+- finding a line
+- case insensitive search
+- replacing a line
+- search and replace in visual mode
+- advanced regex
+- buffers
+- tabs
+- windows
+- registers
+- copy line to/from clipboard
+- copy to vim command
+- tags
+- go to file
+- refresh file
+- Spell check (You can use ]S to jump to the next word with bad spelling, see the suggested words using z= or add it to the dictionary with zg)
+- refresh vimrc
