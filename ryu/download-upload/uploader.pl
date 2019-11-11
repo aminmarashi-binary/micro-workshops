@@ -52,7 +52,6 @@ async sub upload {
 
     my $idx = 0;
     for(;;await $self->loop->delay_future(after => $self->delay)) {
-        warn 'here i am';
         $output .= $self->chunks->($idx, $self->chunk_size);
         $idx += $self->chunk_size;
         last unless length $output < $self->size;
