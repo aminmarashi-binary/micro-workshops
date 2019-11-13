@@ -9,6 +9,8 @@ use parent qw(IO::Async::Notifier);
 use mro;
 use Ryu::Async;
 use Net::Async::HTTP;
+use Net::Async::BinaryWS;
+use Future::AsyncAwait;
 use URI;
 
 sub configure {
@@ -46,7 +48,44 @@ sub src {
 
     return $self->file_stream($uri->file) if $uri->scheme eq 'file';
 
+    return $self->ticks_stream($uri->path) if $uri->scheme eq 'ticks';
+
     die 'Unknown file location: ' . $src;
+}
+
+sub ticks_stream {
+    my ($self, $symbol) = @_;
+
+    $self->loop->add(
+        my $binary_ws = Net::Async::BinaryWS->new(
+            endpoint => 'wss://frontend.binaryws.com',
+            app_id   => 1,
+        ),
+    );
+
+    my $new_source = $self->ryu->source; # not Ryu::Source->new has no new_future
+
+    $binary_ws
+    ->connected
+    ->on_done(sub {
+        my $api = $binary_ws->api;
+
+        my $source = $api->subscribe(ticks => $symbol);
+
+        $source
+        ->each(sub {
+            my $envelope = shift;
+
+            my $tick = $envelope->body;
+
+            $new_source->emit(
+                $tick->epoch . ',' . $tick->quote . ',' . $tick->ask . ',' . $tick->bid
+            );
+        });
+    })
+    ->retain;
+
+    return $new_source;
 }
 
 sub http_stream {
@@ -61,7 +100,9 @@ sub http_stream {
     $http->do_request(
         uri => $uri,
         on_header => sub {
+            my ($header) = @_;
             return sub {
+                # do sth if $header->code eq 200
                 return $source->finish unless @_;
 
                 $source->emit(shift);

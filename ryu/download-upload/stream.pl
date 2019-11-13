@@ -14,6 +14,7 @@ streamer
 =head1 SYNOPSIS
 
     perl streamer --from file:test --to s3://something
+    perl streamer --from ticks:R_100 --to something
 
 =head1 DESCRIPTION
 
