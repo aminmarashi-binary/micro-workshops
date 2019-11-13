@@ -42,7 +42,9 @@ sub src {
 
     die 'Unknown uri scheme: ' . $src unless $uri->scheme;
 
-    return $self->{src} = $self->http_stream($uri) if $uri->scheme =~ /^file|https?$/;
+    return $self->{src} = $self->http_stream($uri) if $uri->scheme =~ /^https?$/;
+
+    return $self->file_stream($uri->file) if $uri->scheme eq 'file';
 
     die 'Unknown file location: ' . $src;
 }
@@ -53,8 +55,6 @@ sub http_stream {
     $self->loop->add(
         my $http = Net::Async::HTTP->new(),
     );
-
-    return $self->file_stream($uri->file) if $uri->scheme eq 'file';
 
     my $source = $self->ryu->source;
 
