@@ -42,6 +42,7 @@ sub dst {
     ->each(sub {
         my $line = shift;
 
+        unlink $dst;
         open(my $fh, '>>', $dst) or die "Cannot open file $dst for write: $!";
         print $fh $line;
         close $fh;

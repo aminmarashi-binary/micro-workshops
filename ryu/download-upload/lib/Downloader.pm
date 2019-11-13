@@ -38,22 +38,28 @@ sub src {
 
     return $src if ref($src) and $src->isa('Ryu::Source');
 
-    return $self->{src} = $self->file_stream($src) if -f $src;
+    my $uri = URI->new($src);
 
-    return $self->{src} = $self->http_stream($src) if URI->new($src)->scheme =~ /^https?$/;
+    die 'Unknown uri scheme: ' . $src unless $uri->scheme;
+
+    return $self->{src} = $self->http_stream($uri) if $uri->scheme =~ /^file|https?$/;
+
+    die 'Unknown file location: ' . $src;
 }
 
 sub http_stream {
-    my ($self, $src) = @_;
+    my ($self, $uri) = @_;
 
     $self->loop->add(
         my $http = Net::Async::HTTP->new(),
     );
 
+    return $self->file_stream($uri->file) if $uri->scheme eq 'file';
+
     my $source = $self->ryu->source;
 
     $http->do_request(
-        uri => URI->new($src),
+        uri => $uri,
         on_header => sub {
             return sub {
                 return $source->finish unless @_;
