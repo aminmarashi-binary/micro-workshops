@@ -38,13 +38,13 @@ sub dst {
 
     my $source = $self->ryu->source;
 
+    unlink $dst;
     return $self->{dst} = $source
     ->each(sub {
         my $line = shift;
 
-        unlink $dst;
         open(my $fh, '>>', $dst) or die "Cannot open file $dst for write: $!";
-        print $fh $line;
+        print $fh $line . "\n";
         close $fh;
     });
 }
