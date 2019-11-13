@@ -66,7 +66,8 @@ sub run {
     ->each(sub {
         $self->dst->emit(shift);
     })
-    ->completed;
+    ->completed
+    ->on_ready($self->dst->completed);
 }
 
 1;

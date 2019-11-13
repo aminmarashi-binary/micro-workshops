@@ -9,7 +9,7 @@ my $loop = IO::Async::Loop->new;
 
 $loop->add(
     my $downloader = Downloader->new(
-        src => './source_file',
+        src => 'https://google.com',
     ),
 );
 

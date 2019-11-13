@@ -8,6 +8,8 @@ use parent qw(IO::Async::Notifier);
 
 use mro;
 use Ryu::Async;
+use Net::Async::HTTP;
+use URI;
 
 sub configure {
     my ($self, %args) = @_;
@@ -36,6 +38,37 @@ sub src {
 
     return $src if ref($src) and $src->isa('Ryu::Source');
 
+    return $self->{src} = $self->file_stream($src) if -f $src;
+
+    return $self->{src} = $self->http_stream($src) if URI->new($src)->scheme =~ /^https?$/;
+}
+
+sub http_stream {
+    my ($self, $src) = @_;
+
+    $self->loop->add(
+        my $http = Net::Async::HTTP->new(),
+    );
+
+    my $source = $self->ryu->source;
+
+    $http->do_request(
+        uri => URI->new($src),
+        on_header => sub {
+            return sub {
+                return $source->finish unless @_;
+
+                $source->emit(shift);
+            };
+        },
+    );
+
+    return $source;
+}
+
+sub file_stream {
+    my ($self, $src) = @_;
+
     my $source = $self->ryu->source;
 
     open(my $fh, '<', $src) or die "Cannot open file $src for read $!";
@@ -49,7 +82,7 @@ sub src {
         });
     };
 
-    return $self->{src} = $source;
+    return $source;
 }
 
 sub run {
