@@ -20,8 +20,8 @@ use Future::AsyncAwait;
 my $loop = IO::Async::Loop->new;
 $loop->add(
     my $ws = Async::WebSocket->new(
-        app_id => 1069,
-        host => 'blue.binaryws.com',
+        app_id => 3012,
+        host => 'ws.binaryws.com',
         on_frame => \&on_frame,
     )
 );
