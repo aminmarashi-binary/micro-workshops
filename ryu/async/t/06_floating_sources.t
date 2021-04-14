@@ -29,7 +29,11 @@ sub merge_r_50_and_r_100 {
     $src_r_100->each($combined->curry::weak::emit);
     $src_r_50->each($combined->curry::weak::emit);
 
-    $combined->each(
+    $combined
+    ->each(sub {
+        diag $_->body->ask
+    })
+    ->each(
         sub {
             push @$merged_ticks, $_->body->ask;
         });
@@ -41,11 +45,7 @@ subtest 'A source finishes as soon as it is not needed' => async sub {
     my $merged_ticks = [];
     merge_r_50_and_r_100($merged_ticks);
 
-    # Count to 5
-    for my $count (1 .. 5) {
-        diag $count;
-        await $loop->delay_future(after => 1);
-    }
+    await $loop->delay_future(after => 3);
 
     # Give me some ticks, I have nothing!
     ok scalar @$merged_ticks > 0, 'One or more ticks are received';
