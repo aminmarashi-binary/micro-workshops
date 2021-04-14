@@ -38,7 +38,7 @@ subtest 'An interval source, emits a count every second' => async sub {
 
     TODO: {
         local $TODO = 'Give me what I want, with the format I expect';
-        is_deeply \@items, [map { "item: $_" } 0..5], '5 items are received'; 
+        is_deeply \@items, [map { "item: $_" } 0..4], '5 items are received'; 
     }
 };
 
