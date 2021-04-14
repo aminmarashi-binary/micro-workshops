@@ -42,11 +42,11 @@ subtest 'Subscribe to proposals' => async sub {
         duration      => 5,
         duration_unit => 'm',
     });
-    $loop->delay_future(after => 5)->then(sub { $src->finish })->retain;
     my @price_list = await(
         $src->each(sub { diag $_->{msg_type} })
             # ->each(sub { diag explain $_->{proposal} })
             # Put something here
+            ->take(3)
             ->as_list
     );
     # Get me ask_price of the proposals
