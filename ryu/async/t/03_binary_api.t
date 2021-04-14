@@ -23,7 +23,8 @@ subtest 'ping' => async sub {
 
     my $msg = await $api->ping;
 
-    is $msg->body, 'pong', 'pong is received';
+    # What do I get from ping?
+    is $msg->body, '', 'ping was successful';
 };
 
 subtest 'Subscribe to ticks and get three' => async sub {
@@ -32,18 +33,19 @@ subtest 'Subscribe to ticks and get three' => async sub {
     my @ticks = await (
         $api
         ->subscribe(ticks => 'R_100', subscribe => 1)
+        ->map(sub { diag $_->body->ask })
         ->take(3)
         ->as_list
     );
 
-    is_deeply [map { $_->type } @ticks], [qw(tick tick tick)], 'The returned value is an array of ticks';
+    # What type of response I expect?
+    is_deeply [map { $_->type } @ticks], [], 'Three ticks are received';
 };
 
 subtest 'Subscribe to ticks and get three' => async sub {
     await $ws->connected;
 
-    my @price_list = await (
-        $api
+    my $two_prices = $api
         ->subscribe(proposal => {
             subscribe => 1,
             amount => 10,
@@ -54,15 +56,14 @@ subtest 'Subscribe to ticks and get three' => async sub {
             duration => 5,
             duration_unit => 'm',
         })
-        ->map(sub { shift->body })
-        ->take(2)
-        ->map(sub { shift->payout })
-        ->as_list
-    );
+        ->map(sub { $_->body->ask_price })
+        ->take(2);
 
+    my @price_list; # Get the price list
+    # Get me my price list
     is scalar @price_list, 2, 'We got two prices';
     for my $price (@price_list) {
-        ok $price > 10, 'payout must be greater than stake';
+        is $price, 10, 'Price should be ask_price = 10';
     }
 };
 

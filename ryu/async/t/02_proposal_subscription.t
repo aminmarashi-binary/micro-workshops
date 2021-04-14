@@ -44,20 +44,17 @@ subtest 'Subscribe to proposals' => async sub {
         duration => 5,
         duration_unit => 'm',
     });
+    $loop->delay_future(after => 5)->then(sub { $src->finish })->retain;
     my @price_list = await (
         $src
-        ->each(sub {
-            diag explain shift;
-        })
-        ->take(2)
-        ->map(sub {
-            shift->{proposal}{payout}
-        })
+        ->each(sub { diag $_->{msg_type} })
+        # ->each(sub { diag explain $_->{proposal} })
+        # Put something here
         ->as_list
     );
-    is scalar @price_list, 2, 'We got two prices';
+    # Get me ask_price of the proposals
     for my $price (@price_list) {
-        ok $price > 10, 'payout must be greater than stake';
+        is $price, 10, 'Price should be ask_price = 10';
     }
 };
 

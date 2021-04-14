@@ -27,15 +27,17 @@ my $src = $ryu->source(label => 'counter');
 
 
 subtest 'An interval source, emits a count every second' => async sub {
-    my @items = await ($src
-    ->each(sub {
-        diag $_;
-    })
-    ->take(5)
-    ->prefix('Item: ')
-    ->as_list);
+    my @items = await (
+        $src
+        ->each(sub {
+            diag $_;
+        })
+        ->take(5)
+        ->as_list
+    );
 
-    is_deeply \@items, [map { "Item: $_" } 0..4], '5 items are received'; 
+    # Give me what I want, with the format I expect
+    is_deeply \@items, [map { "item: $_" } 0..4], '5 items are received'; 
 };
 
 done_testing;
