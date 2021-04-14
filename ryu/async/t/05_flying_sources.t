@@ -24,8 +24,8 @@ sub merge_r_50_and_r_100 {
     my $src_r_50 = $api->subscribe(ticks => 'R_50');
     my $src_r_100 = $api->subscribe(ticks => 'R_100');
 
-    # same as $combined = $src_r_100->merge($src_r_50);
-    # but we can't use that in this example
+    ## same as $combined = $src_r_100->merge($src_r_50);
+    ## but we can't use that in this example
     my $combined = $api->new_source;
     $src_r_100
     ->each($combined->curry::weak::emit);
@@ -36,7 +36,6 @@ sub merge_r_50_and_r_100 {
     ->each(sub {
         push @$merged_items, $_->body->ask;
     })
-    # What's the $combined source state now?
 }
 
 subtest 'A source finishes as soon as it is not needed' => async sub {
