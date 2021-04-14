@@ -27,12 +27,14 @@ my $src = $ryu->source(label => 'counter');
 
 
 subtest 'An interval source, emits a count every second' => async sub {
-    my @items = await ($src
-    ->each(sub {
-        diag $_;
-    })
-    ->take(5)
-    ->as_list);
+    my @items = await (
+        $src
+        ->each(sub {
+            diag $_;
+        })
+        ->take(5)
+        ->as_list
+    );
 
     TODO: {
         local $TODO = 'Give me what I want, with the format I expect';
