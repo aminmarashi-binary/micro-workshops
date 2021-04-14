@@ -47,15 +47,12 @@ subtest 'Subscribe to proposals' => async sub {
     $loop->delay_future(after => 5)->then(sub { $src->finish })->retain;
     my @price_list = await (
         $src
-        ->each(sub {
-            diag explain shift->{proposal};
-        })
+        # ->each(sub { diag explain shift->{proposal} })
         # Put something here
         ->as_list
     );
     TODO: {
-        local $TODO = 'we need two proposals';
-        is scalar @price_list, 2, 'We got two prices';
+        local $TODO = 'Get me ask_price of the proposals';
         for my $price (@price_list) {
             is $price, 10, 'Price should be ask_price = 10';
         }

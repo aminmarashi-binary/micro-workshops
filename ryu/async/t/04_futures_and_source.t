@@ -32,12 +32,11 @@ subtest 'An interval source, emits a count every second' => async sub {
         diag $_;
     })
     ->take(5)
-    ->prefix('Item: ')
     ->as_list);
 
     TODO: {
-        local $TODO = 'Make me pass';
-        is_deeply \@items, [], '5 items are received'; 
+        local $TODO = 'Give me what I want, with the format I expect';
+        is_deeply \@items, [map { "item: $_" } 0..5], '5 items are received'; 
     }
 };
 
