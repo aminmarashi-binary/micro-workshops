@@ -31,6 +31,7 @@ subtest 'What error? I do not know what you are talking about' => async sub {
             ->each(sub {
                 die 'source, die!';
             })
+            ->get
         } qr/die/, 'error should be caught';
     }
 };
