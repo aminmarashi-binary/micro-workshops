@@ -47,7 +47,7 @@ subtest 'Subscribe to proposals' => async sub {
     $loop->delay_future(after => 5)->then(sub { $src->finish })->retain;
     my @price_list = await (
         $src
-        # ->each(sub { diag explain shift->{proposal} })
+        # ->each(sub { diag explain $_->{proposal} })
         # Put something here
         ->as_list
     );
