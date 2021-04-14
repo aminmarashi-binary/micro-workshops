@@ -24,12 +24,12 @@ $loop->add(
 
 subtest 'Ping the API' => sub {
     $src = Ryu::Source->new;
+    $ws->connected->get;
     my $response = $loop->new_future;
     $src->each(
         sub {
             $response->done($_);
         });
-    $ws->connected->get;
     $ws->send({ping => 1})->get;
     my $msg = $response->get;
     is $msg->{ping}, 'pong', 'pong is received';
