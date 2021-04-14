@@ -26,7 +26,11 @@ subtest 'Keep the items around after 6 seconds' => async sub {
     ->map(sub { $_->body->ask })
     ->take(2);
 
-    await $loop->delay_future(after => 6);
+    # Count to 6
+    for my $count (1..6) {
+        diag $count;
+        await $loop->delay_future(after => 1);
+    }
     $take_two_s->finish;
 
     my @ticks = await $take_two_s->as_list;

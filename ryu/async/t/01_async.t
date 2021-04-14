@@ -27,7 +27,7 @@ subtest 'Ping the API' => sub {
     $src = Ryu::Source->new;
     my $response = $loop->new_future;
     $src->each(sub {
-        $response->done(shift);
+        $response->done($_);
     });
     $ws->connected->get;
     $ws->send({ping => 1})->get;

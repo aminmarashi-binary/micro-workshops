@@ -44,7 +44,11 @@ subtest 'A source finishes as soon as it is not needed' => async sub {
     my $merged_ticks = [];
     merge_r_50_and_r_100($merged_ticks);
 
-    await $loop->delay_future(after => 6);
+    # Count to 5
+    for my $count (1..5) {
+        diag $count;
+        await $loop->delay_future(after => 1);
+    }
 
     # Give me some ticks, I have nothing!
     ok scalar @$merged_ticks > 0, 'One or more ticks are received';
