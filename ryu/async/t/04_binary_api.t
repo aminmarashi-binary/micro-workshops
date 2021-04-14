@@ -54,9 +54,8 @@ subtest 'Subscribe to ticks and get three' => async sub {
             duration => 5,
             duration_unit => 'm',
         })
-        ->map(sub { shift->body })
+        ->map(sub { shift->body->payout })
         ->take(2)
-        ->map(sub { shift->payout })
         ->as_list
     );
 
