@@ -47,7 +47,7 @@ subtest 'A source finishes as soon as it is not needed' => async sub {
     await $loop->delay_future(after => 6);
 
     TODO: {
-        local $TODO = 'Give me more items';
+        local $TODO = 'Give me some items, I have nothing!';
         ok scalar @$merged_items > 0, 'Some items are received';
     };
 };
