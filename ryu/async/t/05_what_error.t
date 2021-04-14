@@ -23,16 +23,14 @@ my $api = $ws->api;
 subtest 'What error? I do not know what you are talking about' => async sub {
     await $ws->connected;
 
-    TODO: {
-        local $TODO = 'Make me die if you can!';
-        throws_ok {
-            $api
-            ->subscribe(ticks => "R_200")
-            ->each(sub {
-                die 'source, die!';
-            })
-        } qr/die/, 'error should be caught';
-    }
+    # Make me die if you can!
+    throws_ok {
+        $api
+        ->subscribe(ticks => "R_200")
+        ->each(sub {
+            die 'source, die!';
+        })
+    } qr/die/, 'error should be caught';
 };
 
 done_testing;

@@ -36,7 +36,6 @@ subtest 'Ping the API' => sub {
 };
 
 subtest 'Can take three ticks from the API' => sub {
-    plan skip_all => 'Make me pass without dying';
     $src = Ryu::Source->new;
     $ws->send({ticks => 'R_100'})->get;
     my @ticks = $src->take(3)->as_list->get;

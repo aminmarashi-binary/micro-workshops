@@ -18,7 +18,7 @@ $loop->add(
 );
 my $api = $ws->api;
 
-subtest 'Keep living if children die' => async sub {
+subtest 'Keep parents alive even if children die' => async sub {
     await $ws->connected;
 
     my $ticks = $api
@@ -31,10 +31,8 @@ subtest 'Keep living if children die' => async sub {
 
     @ticks = await $ticks->take(2)->as_list;
 
-    TODO: {
-        local $TODO = 'Keep me alive please';
-        is scalar @ticks, 2, 'two more items received';
-    }
+    # Keep me alive please
+    is scalar @ticks, 2, 'two more items received';
 };
 
 done_testing;

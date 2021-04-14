@@ -51,11 +51,9 @@ subtest 'Subscribe to proposals' => async sub {
         # Put something here
         ->as_list
     );
-    TODO: {
-        local $TODO = 'Get me ask_price of the proposals';
-        for my $price (@price_list) {
-            is $price, 10, 'Price should be ask_price = 10';
-        }
+    # Get me ask_price of the proposals
+    for my $price (@price_list) {
+        is $price, 10, 'Price should be ask_price = 10';
     }
 };
 
