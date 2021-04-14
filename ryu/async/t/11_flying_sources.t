@@ -46,7 +46,7 @@ subtest 'A source finishes as soon as it is not needed' => async sub {
 
     await $loop->delay_future(after => 6);
 
-    pass '6 seconds passed';
+    pass 'Combined ticks of 50 and 100 should be printed';
 };
 
 done_testing;

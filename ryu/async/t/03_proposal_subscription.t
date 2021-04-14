@@ -46,13 +46,13 @@ subtest 'Subscribe to proposals' => async sub {
     });
     my @price_list = await (
         $src
+        ->map(sub {
+            shift->{proposal}{payout}
+        })
         ->each(sub {
             diag explain shift;
         })
         ->take(2)
-        ->map(sub {
-            shift->{proposal}{payout}
-        })
         ->as_list
     );
     is scalar @price_list, 2, 'We got two prices';
