@@ -62,7 +62,7 @@ subtest 'Subscribe to ticks and get three' => async sub {
         ->map(sub { shift->body->ask_price })
         ->take(2);
 
-    my @price_list = $two_prices->as_list; # Get the price list
+    my @price_list; # Get the price list
     TODO: {
         local $TODO = 'Get me my price list';
         is scalar @price_list, 2, 'We got two prices';
