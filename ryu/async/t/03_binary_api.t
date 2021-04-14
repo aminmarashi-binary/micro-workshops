@@ -33,7 +33,7 @@ subtest 'Subscribe to ticks and get three' => async sub {
         $api->subscribe(
             ticks     => 'R_100',
             subscribe => 1
-        )->map(sub { diag $_->body->ask })->take(3)->as_list
+        )->each(sub { diag $_->body->ask })->take(3)->as_list
     );
 
     # What type of response I expect?
