@@ -46,7 +46,7 @@ subtest 'A source finishes as soon as it is not needed' => async sub {
 
     await $loop->delay_future(after => 6);
 
-    pass '5 seconds passed';
+    pass '6 seconds passed';
 };
 
 done_testing;
