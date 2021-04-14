@@ -24,7 +24,7 @@ subtest 'ping' => async sub {
     my $msg = await $api->ping;
 
     TODO: {
-        local $TODO = 'Implement me!';
+        local $TODO = 'What do I get from ping?';
         is $msg->body, '', 'ping was successful';
     }
 };
@@ -40,7 +40,7 @@ subtest 'Subscribe to ticks and get three' => async sub {
     );
 
     TODO: {
-        local $TODO = 'Implement me!';
+        local $TODO = 'What type of response I expect?';
         is_deeply [map { $_->type } @ticks], [], 'Three ticks are received';
     }
 };
@@ -62,7 +62,7 @@ subtest 'Subscribe to ticks and get three' => async sub {
         ->map(sub { shift->body->ask_price })
         ->take(2);
 
-    my @price_list;
+    my @price_list; # Get the price list
     TODO: {
         local $TODO = 'Get me my price list';
         is scalar @price_list, 2, 'We got two prices';
