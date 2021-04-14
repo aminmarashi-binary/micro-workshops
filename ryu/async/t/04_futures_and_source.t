@@ -15,7 +15,7 @@ $loop->add(my $ryu = Ryu::Async->new);
 my $src = $ryu->source(label => 'counter');
 (
     async sub {
-        for my $count (0 .. 1000) {
+        for my $count (1 .. 1000) {
             await($loop->delay_future(after => 1));
             $src->emit($count);
         }
@@ -27,11 +27,11 @@ subtest 'An interval source, emits a count every second' => async sub {
             sub {
                 diag $_;
             }
-        )->take(5)->as_list
+        )->take(3)->as_list
     );
 
     # Give me what I want, with the format I expect
-    is_deeply \@items, [map { "item: $_" } 0 .. 4], '5 items are received';
+    is_deeply \@items, [map { "item: $_" } 1 .. 3], 'All items are received';
 };
 
 done_testing;
