@@ -12,22 +12,18 @@ use Future::AsyncAwait;
 my $loop = IO::Async::Loop->new;
 $loop->add(
     my $ws = Net::Async::BinaryWS->new(
-        app_id => 3012,
+        app_id   => 3012,
         endpoint => 'ws.binaryws.com',
-    )
-);
+    ));
 my $api = $ws->api;
 
 subtest 'Keep the items around after 6 seconds' => async sub {
     await $ws->connected;
 
-    my $take_two_s = $api
-    ->subscribe(ticks => "R_100")
-    ->map(sub { $_->body->ask })
-    ->take(2);
+    my $take_two_s = $api->subscribe(ticks => "R_100")->map(sub { $_->body->ask })->take(2);
 
     # Count to 6
-    for my $count (1..6) {
+    for my $count (1 .. 6) {
         diag $count;
         await $loop->delay_future(after => 1);
     }

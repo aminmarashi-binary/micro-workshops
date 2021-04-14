@@ -93,7 +93,7 @@ sub base_uri {
     $self->{base_uri} //= do {
         my $u = URI->new($self->scheme . '://' . $self->host . '/websockets/' . $self->api_version);
         $u->port($self->port);
-        $u
+        $u;
     }
 }
 
@@ -117,7 +117,7 @@ sub uri {
         my $uri = $self->base_uri->clone;
         $uri->query_param(l      => uc($self->lang));
         $uri->query_param(app_id => $self->app_id) if $self->app_id;
-        $uri
+        $uri;
     }
 }
 
@@ -152,16 +152,16 @@ Called whenever we have a new frame.
 sub on_frame {
     my ($self, $ws, $framebuffer, $bytes) = @_;
     eval {
-        if($framebuffer->is_close) {
+        if ($framebuffer->is_close) {
             my ($code, $reason) = unpack 'n1a*', $bytes;
             $reason = Encode::decode_utf8($reason);
             $log->tracef("<< Close frame: %d %s", $code, $reason);
             $self->{on_close_frame}($code, $reason);
-        } elsif($framebuffer->is_text) {
+        } elsif ($framebuffer->is_text) {
             $log->tracef("<< %s", Encode::decode_utf8($bytes));
             $self->{on_frame}($bytes);
         }
-        1
+        1;
     } or do {
         $log->errorf("Error processing frame [%v02x]: %s", $bytes, $@);
     }
@@ -190,7 +190,7 @@ sub send {
         type   => 'text',
         buffer => $msg,
         masked => 1,
-    )
+    );
 }
 
 =head2 connect
@@ -207,18 +207,23 @@ sub connect {
 
     $log->debugf("Connecting to %s", "$uri");
     $self->{connection} = $client->connect(
-        url             => "$uri",
-        ($uri->scheme eq 'wss' ? (
-            SSL_hostname    => $uri->host,
-            SSL_verify_mode => SSL_VERIFY_NONE,
-        ) : ()),
+        url => "$uri",
+        (
+            $uri->scheme eq 'wss'
+            ? (
+                SSL_hostname    => $uri->host,
+                SSL_verify_mode => SSL_VERIFY_NONE,
+                )
+            : ()
+        ),
         req => Protocol::WebSocket::Request->new(
             headers => $self->http_headers,
         ),
-    )->then(sub {
-        $log->debugf("Connected to %s", "$uri");
-        $self->connected->done;
-    })->on_fail(sub { $log->errorf("Failed to connect to %s - %s", $uri, shift) })->retain;
+    )->then(
+        sub {
+            $log->debugf("Connected to %s", "$uri");
+            $self->connected->done;
+        })->on_fail(sub { $log->errorf("Failed to connect to %s - %s", $uri, shift) })->retain;
 }
 
 sub ws { shift->{ws} }
@@ -229,8 +234,7 @@ sub _add_to_loop {
     $self->add_child(
         $self->{ws} = Net::Async::WebSocket::Client->new(
             on_raw_frame => $self->curry::weak::on_frame,
-        )
-    );
+        ));
     # $self->{ws} is just a convenience accessor for the websocket child
     Scalar::Util::weaken($self->{ws});
     $self->connect;

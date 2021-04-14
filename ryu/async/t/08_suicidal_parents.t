@@ -12,31 +12,21 @@ use Future::AsyncAwait;
 my $loop = IO::Async::Loop->new;
 $loop->add(
     my $ws = Net::Async::BinaryWS->new(
-        app_id => 3012,
+        app_id   => 3012,
         endpoint => 'ws.binaryws.com',
-    )
-);
+    ));
 my $api = $ws->api;
 
 subtest 'Keep parents alive even if children die' => async sub {
     await $ws->connected;
 
-    my $ticks = $api
-    ->subscribe(ticks => "R_100")
-    ->map(sub { $_->body->ask });
+    my $ticks = $api->subscribe(ticks => "R_100")->map(sub { $_->body->ask });
 
-    my @ticks = await $ticks
-    ->each(sub { diag $_ })
-    ->take(2)
-    ->as_list;
+    my @ticks = await $ticks ->each(sub { diag $_ })->take(2)->as_list;
 
     is scalar @ticks, 2, 'two items received';
 
-    @ticks = await $ticks
-    ->each(sub { diag $_ })
-    ->take(2)
-    ->as_list;
-
+    @ticks = await $ticks ->each(sub { diag $_ })->take(2)->as_list;
 
     # Keep the parents alive please
     is scalar @ticks, 2, 'two more items received';

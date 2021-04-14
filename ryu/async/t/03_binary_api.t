@@ -12,10 +12,9 @@ use Future::AsyncAwait;
 my $loop = IO::Async::Loop->new;
 $loop->add(
     my $ws = Net::Async::BinaryWS->new(
-        app_id => 3012,
+        app_id   => 3012,
         endpoint => 'ws.binaryws.com',
-    )
-);
+    ));
 my $api = $ws->api;
 
 subtest 'ping' => async sub {
@@ -30,12 +29,11 @@ subtest 'ping' => async sub {
 subtest 'Subscribe to ticks and get three' => async sub {
     await $ws->connected;
 
-    my @ticks = await (
-        $api
-        ->subscribe(ticks => 'R_100', subscribe => 1)
-        ->map(sub { diag $_->body->ask })
-        ->take(3)
-        ->as_list
+    my @ticks = await(
+        $api->subscribe(
+            ticks     => 'R_100',
+            subscribe => 1
+        )->map(sub { diag $_->body->ask })->take(3)->as_list
     );
 
     # What type of response I expect?
@@ -45,22 +43,20 @@ subtest 'Subscribe to ticks and get three' => async sub {
 subtest 'Subscribe to ticks and get three' => async sub {
     await $ws->connected;
 
-    my $two_prices = $api
-        ->subscribe(proposal => {
-            subscribe => 1,
-            amount => 10,
-            currency => 'USD',
-            basis => 'stake',
+    my $two_prices = $api->subscribe(
+        proposal => {
+            subscribe     => 1,
+            amount        => 10,
+            currency      => 'USD',
+            basis         => 'stake',
             contract_type => 'PUT',
-            symbol => 'frxUSDJPY',
-            duration => 5,
+            symbol        => 'frxUSDJPY',
+            duration      => 5,
             duration_unit => 'm',
-        })
-        ->map(sub { $_->body->ask_price })
-        ->take(2);
+        })->map(sub { $_->body->ask_price })->take(2);
 
-    my @price_list; # Get the price list
-    # Get me my price list
+    my @price_list;    # Get the price list
+                       # Get me my price list
     is scalar @price_list, 2, 'We got two prices';
     for my $price (@price_list) {
         is $price, 10, 'Price should be ask_price = 10';

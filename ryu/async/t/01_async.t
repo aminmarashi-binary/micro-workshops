@@ -10,25 +10,25 @@ use IO::Async::Loop;
 use Future::AsyncAwait;
 use Ryu::Source;
 
-my $src; # This is a source that we define per test
+my $src;    # This is a source that we define per test
 my $loop = IO::Async::Loop->new;
 $loop->add(
     my $ws = Async::WebSocket->new(
-        app_id => 3012,
-        host => 'ws.binaryws.com',
+        app_id   => 3012,
+        host     => 'ws.binaryws.com',
         on_frame => sub {
             return unless defined $src;
             $src->emit(shift);
         },
-    )
-);
+    ));
 
 subtest 'Ping the API' => sub {
     $src = Ryu::Source->new;
     my $response = $loop->new_future;
-    $src->each(sub {
-        $response->done($_);
-    });
+    $src->each(
+        sub {
+            $response->done($_);
+        });
     $ws->connected->get;
     $ws->send({ping => 1})->get;
     my $msg = $response->get;

@@ -14,10 +14,9 @@ use Syntax::Keyword::Try;
 my $loop = IO::Async::Loop->new;
 $loop->add(
     my $ws = Net::Async::BinaryWS->new(
-        app_id => 3012,
+        app_id   => 3012,
         endpoint => 'ws.binaryws.com',
-    )
-);
+    ));
 my $api = $ws->api;
 
 subtest 'What error? I do not know what you are talking about' => async sub {
@@ -25,12 +24,12 @@ subtest 'What error? I do not know what you are talking about' => async sub {
 
     # Make me die if you can!
     throws_ok {
-        $api
-        ->subscribe(ticks => "R_200")
-        ->each(sub {
-            die 'source, die!';
-        })
-    } qr/die/, 'error should be caught';
+        $api->subscribe(ticks => "R_200")->each(
+            sub {
+                die 'source, die!';
+            })
+    }
+    qr/die/, 'error should be caught';
 };
 
 done_testing;
