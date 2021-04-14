@@ -20,6 +20,7 @@ $loop->add(
 my $api = $ws->api;
 
 sub merge_r_50_and_r_100 {
+    my $merged_items = shift;
     my $src_r_50 = $api->subscribe(ticks => 'R_50');
     my $src_r_100 = $api->subscribe(ticks => 'R_100');
 
@@ -33,7 +34,7 @@ sub merge_r_50_and_r_100 {
 
     $combined
     ->each(sub {
-        diag $_->body->ask
+        push @$merged_items, $_->body->ask;
     })
     # What's the $combined source state now?
 }
@@ -41,12 +42,15 @@ sub merge_r_50_and_r_100 {
 subtest 'A source finishes as soon as it is not needed' => async sub {
     await $ws->connected;
 
-    # What will this print?
-    merge_r_50_and_r_100();
+    my $merged_items = [];
+    merge_r_50_and_r_100($merged_items);
 
     await $loop->delay_future(after => 6);
 
-    pass 'Combined ticks of 50 and 100 should be printed';
+    TODO: {
+        local $TODO = 'Give me more items';
+        ok scalar @$merged_items > 0, 'Some items are received';
+    };
 };
 
 done_testing;

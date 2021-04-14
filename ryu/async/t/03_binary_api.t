@@ -23,7 +23,10 @@ subtest 'ping' => async sub {
 
     my $msg = await $api->ping;
 
-    is $msg->body, 'pong', 'pong is received';
+    TODO: {
+        local $TODO = 'Implement me!';
+        is $msg->body, '', 'ping was successful';
+    }
 };
 
 subtest 'Subscribe to ticks and get three' => async sub {
@@ -36,7 +39,10 @@ subtest 'Subscribe to ticks and get three' => async sub {
         ->as_list
     );
 
-    is_deeply [map { $_->type } @ticks], [qw(tick tick tick)], 'The returned value is an array of ticks';
+    TODO: {
+        local $TODO = 'Implement me!';
+        is_deeply [map { $_->type } @ticks], [], 'Three ticks are received';
+    }
 };
 
 subtest 'Subscribe to ticks and get three' => async sub {
@@ -54,14 +60,17 @@ subtest 'Subscribe to ticks and get three' => async sub {
             duration => 5,
             duration_unit => 'm',
         })
-        ->map(sub { shift->body->payout })
+        # Put something here
         ->take(2)
         ->as_list
     );
 
     is scalar @price_list, 2, 'We got two prices';
-    for my $price (@price_list) {
-        ok $price > 10, 'payout must be greater than stake';
+    TODO: {
+        local $TODO = 'Prices are not what we want';
+        for my $price (@price_list) {
+            is $price, 10, 'Price should be ask_price = 10';
+        }
     }
 };
 
